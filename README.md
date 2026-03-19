@@ -14,3 +14,10 @@ Bu benim web geliştirme dünyasına adım attığım **ilk projem!** 🚀
 - **HTML5** (Yapısal kurgu)
 - **CSS3** (Inter fontu, Flexbox ve modern görsel efektler)
 - **JavaScript** (Hesaplama mantığı ve LocalStorage yönetimi)
+## 🚀 Canlı Önizleme
+Projeyi tarayıcınızda görüntülemek için: 
+https://diktasberkmetin-droid.github.io/iz-analiz/
+
+---
+*Bu proje çevre bilincini artırmak amacıyla eğitim odaklı geliştirilmiştir.*
+**Geliştirici:** Metin Berk Diktaş
