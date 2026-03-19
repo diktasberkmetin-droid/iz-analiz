@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gelecek Simülasyonu | İz Analiz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --bg: #020617; 
+            --panel-bg: rgba(15, 23, 42, 0.95); 
+            --blue: #38bdf8; 
+            --green: #22c55e; 
+            --red: #ef4444; 
+        }
+
+        body { 
+            margin: 0; 
+            background: var(--bg); 
+            color: white; 
+            font-family: 'Inter', sans-serif; 
+            height: 100vh; 
+            width: 100vw; 
+            overflow: hidden; 
+            position: relative; 
+            background-image: radial-gradient(circle at center, #070e25 0%, #020617 100%); 
+        }
+        
+        /* Dünya Kapsayıcısı - Tam Ortada */
+        .world-stage { 
+            position: absolute; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+            width: 75vh; 
+            height: 75vh; 
+            border-radius: 50%; 
+            overflow: hidden; 
+            background: #000; 
+            box-shadow: 0 0 100px #000; 
+            z-index: 1; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+        }
+
+        .atmosphere { 
+            position: absolute; 
+            width: 100%; 
+            height: 100%; 
+            border-radius: 50%; 
+            z-index: 10; 
+            pointer-events: none; 
+            transition: all 1.5s ease; 
+            box-shadow: inset 0 0 50px rgba(255,255,255,0.1); 
+        }
+        
+        /* Görsel Katmanları */
+        .layer { 
+            position: absolute; 
+            height: 100%; 
+            width: auto; 
+            opacity: 0; 
+            transition: opacity 1.3s ease; 
+            transform: scale(1.1); 
+            animation: rotate 200s linear infinite; 
+        }
+
+        /* 🚨 UYARI GÖRSELİ ÖZEL BOYUTLANDIRMASI (v2.png veya ai-2.png) */
+        #v2 { 
+            transform: scale(1.45) !important; 
+            animation: rotateWarning 200s linear infinite !important; 
+        }
+        
+        @keyframes rotate { 
+            from { transform: scale(1.1) rotate(0deg); } 
+            to { transform: scale(1.1) rotate(360deg); } 
+        }
+
+        @keyframes rotateWarning { 
+            from { transform: scale(1.45) rotate(0deg); } 
+            to { transform: scale(1.45) rotate(360deg); } 
+        }
+
+        /* Sol Bilgi Paneli */
+        .info-panel { 
+            position: absolute; 
+            left: 30px; 
+            bottom: 30px; 
+            width: 300px; 
+            background: var(--panel-bg); 
+            padding: 25px; 
+            border-radius: 25px; 
+            border: 1px solid rgba(255,255,255,0.1); 
+            z-index: 100; 
+        }
+
+        /* Sağ Bilgi Menüsü */
+        .side-menu { 
+            position: absolute; 
+            right: 30px; 
+            top: 50%; 
+            transform: translateY(-50%); 
+            display: flex; 
+            flex-direction: column; 
+            gap: 12px; 
+            z-index: 100; 
+        }
+
+        .menu-item { 
+            width: 200px; 
+            background: rgba(15, 23, 42, 0.8); 
+            border: 1px solid rgba(255,255,255,0.05); 
+            padding: 15px 20px; 
+            border-radius: 15px; 
+            color: #cbd5e1; 
+            text-decoration: none; 
+            font-size: 0.85rem; 
+            transition: 0.3s; 
+            display: flex; 
+            justify-content: space-between; 
+        }
+
+        .menu-item:hover { 
+            transform: translateX(-10px); 
+            border-color: var(--blue); 
+            background: rgba(56, 189, 248, 0.1); 
+            color: white; 
+        }
+        
+        .badge { 
+            display: inline-block; 
+            padding: 6px 14px; 
+            border-radius: 50px; 
+            font-size: 0.75rem; 
+            font-weight: 800; 
+            margin-bottom: 10px; 
+            letter-spacing: 1px;
+        }
+
+        .temp { 
+            font-size: 3rem; 
+            font-weight: 900; 
+            margin: 5px 0; 
+        }
+
+        .control-btn {
+            border: none;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 48%;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .control-btn:hover {
+            filter: brightness(1.2);
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="world-stage">
+        <div class="atmosphere" id="atmo"></div>
+        <img id="v1" src="ai-1.png" class="layer">
+        <img id="v2" src="ai-2.png" class="layer"> <img id="v3" src="ai-3.png" class="layer">
+        <img id="v4" src="ai-4.png" class="layer">
+        <img id="v5" src="ai-5.png" class="layer">
+        <img id="v6" src="ai-6.png" class="layer">
+    </div>
+
+    <div class="info-panel">
+        <div id="badge" class="badge">ANALİZ EDİLİYOR</div>
+        <div id="temp" class="temp">+0.0°C</div>
+        <p id="desc" style="font-size: 0.85rem; color: #94a3b8; height: 60px; line-height: 1.5;"></p>
+        
+        <div style="display: flex; justify-content: space-between;">
+            <button class="control-btn" onclick="adjustScore(-2000)" style="background: var(--green);">📉 İyileştir</button>
+            <button class="control-btn" onclick="adjustScore(2000)" style="background: var(--red);">📈 Kötüleştir</button>
+        </div>
+    </div>
+
+    <div class="side-menu">
+        <a href="gercekler.html" class="menu-item" style="border-color: #f87171;">
+            <span>🔥 GERÇEKLER</span><span>→</span>
+        </a>
+        <a href="karbon-nedir.html" class="menu-item"><span>🍀 Karbon Nedir?</span><span>→</span></a>
+        <a href="nasil-azaltilir.html" class="menu-item"><span>📉 Nasıl Azaltılır?</span><span>→</span></a>
+        <a href="iklim-krizi.html" class="menu-item"><span>🌡️ İklim Krizi</span><span>→</span></a>
+        <a href="index.html" class="menu-item"><span>↩️ Teste Dön</span></a>
+    </div>
+
+    <script>
+        let currentScore = parseInt(localStorage.getItem('userCarbonScore')) || 8000;
+        const userName = localStorage.getItem('userName') || 'Misafir';
+
+        function adjustScore(val) { 
+            currentScore = Math.max(500, Math.min(30000, currentScore + val)); 
+            renderSimulation(); 
+        }
+
+        function renderSimulation() {
+            const tempValue = (currentScore / 6000).toFixed(1);
+            document.getElementById('temp').innerText = `+${tempValue}°C`;
+            
+            const layers = [
+                document.getElementById('v1'), document.getElementById('v2'), 
+                document.getElementById('v3'), document.getElementById('v4'), 
+                document.getElementById('v5'), document.getElementById('v6')
+            ];
+            
+            // Tüm katmanları gizle
+            layers.forEach(layer => { if(layer) layer.style.opacity = "0"; });
+            
+            let activeIndex = 0;
+            let statusText = "ANALİZ";
+            let glowColor = "#38bdf8";
+            let description = "";
+
+            if (tempValue <= 0.8) { 
+                activeIndex = 0; statusText = "KUSURSUZ"; glowColor = "#22c55e"; description = "Doğa dengede, her şey mükemmel çalışıyor."; 
+            } else if (tempValue <= 1.8) { 
+                activeIndex = 1; statusText = "UYARI"; glowColor = "#fbbf24"; description = "Isınma başladı, buzullar eriyor."; 
+            } else if (tempValue <= 2.8) { 
+                activeIndex = 2; statusText = "TEHLİKE"; glowColor = "#f97316"; description = "Su kıtlığı kapıda, kuraklık artıyor."; 
+            } else if (tempValue <= 3.8) { 
+                activeIndex = 3; statusText = "KRİTİK"; glowColor = "#ef4444"; description = "Ekosistem çöküyor, gıda krizi yolda."; 
+            } else if (tempValue <= 4.8) { 
+                activeIndex = 4; statusText = "ÇÖKÜŞ"; glowColor = "#b91c1c"; description = "Okyanuslar asitlendi, yaşam zorlaşıyor."; 
+            } else { 
+                activeIndex = 5; statusText = "MAHŞER"; glowColor = "#450a0a"; description = "Dünya yanıyor, geri dönüş yok."; 
+            }
+
+            // Aktif katmanı göster
+            if (layers[activeIndex]) {
+                layers[activeIndex].style.opacity = "1";
+            }
+            
+            // Paneli güncelle
+            document.getElementById('badge').innerText = `${userName.toUpperCase()} - ${statusText}`;
+            document.getElementById('badge').style.background = glowColor;
+            document.getElementById('desc').innerText = description;
+            document.getElementById('atmo').style.boxShadow = `inset 0 0 80px ${glowColor}, 0 0 30px ${glowColor}`;
+        }
+
+        window.onload = renderSimulation;
+    </script>
+</body>
+</html>

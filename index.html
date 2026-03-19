@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İz Analiz | Karbon Testi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --bg: #020617; 
+            --card-bg: rgba(15, 23, 42, 0.95); 
+            --accent: #38bdf8; 
+            --text: #f1f5f9; 
+        }
+
+        body { 
+            margin: 0; 
+            background: var(--bg); 
+            color: var(--text); 
+            font-family: 'Inter', sans-serif; 
+            /* Alt alta dizilim için sütun yapısına çevirdik */
+            display: flex; 
+            flex-direction: column;
+            align-items: center; 
+            min-height: 100vh; 
+            /* Kaydırma çubuğunun görünmesi için auto yaptık */
+            overflow-y: auto; 
+            background-image: radial-gradient(circle at center, #070e25 0%, #020617 100%); 
+        }
+
+        #quiz-container { 
+            width: 480px; 
+            background: var(--card-bg); 
+            padding: 40px; 
+            border-radius: 32px; 
+            backdrop-filter: blur(20px); 
+            border: 1px solid rgba(56, 189, 248, 0.2); 
+            box-shadow: 0 25px 60px rgba(0,0,0,0.8); 
+            text-align: center; 
+            /* Kartın ekranın ortasından başlaması için pay verdik */
+            margin-top: 10vh;
+            margin-bottom: 50px;
+        }
+
+        .welcome-screen h1 { 
+            font-weight: 900; 
+            font-size: 2.5rem; 
+            color: var(--accent); 
+            margin-bottom: 10px; 
+        }
+
+        input { 
+            width: 85%; 
+            padding: 18px; 
+            border-radius: 15px; 
+            border: 1px solid rgba(255,255,255,0.1); 
+            background: rgba(255,255,255,0.05); 
+            color: white; 
+            font-size: 1.1rem; 
+            text-align: center; 
+            margin-bottom: 25px; 
+            outline: none; 
+            transition: 0.3s;
+        }
+
+        input:focus { 
+            border-color: var(--accent); 
+        }
+
+        .start-btn { 
+            background: var(--accent); 
+            color: var(--bg); 
+            padding: 16px 45px; 
+            border-radius: 15px; 
+            border: none; 
+            font-weight: 800; 
+            cursor: pointer; 
+            text-transform: uppercase; 
+            transition: 0.3s; 
+        }
+
+        .start-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(56, 189, 248, 0.3);
+        }
+
+        .progress-bar { 
+            width: 100%; 
+            height: 6px; 
+            background: rgba(255,255,255,0.1); 
+            border-radius: 10px; 
+            margin-bottom: 30px; 
+            overflow: hidden; 
+        }
+
+        #progress-fill { 
+            width: 0%; 
+            height: 100%; 
+            background: var(--accent); 
+            transition: width 0.4s ease; 
+        }
+
+        .option-btn { 
+            width: 100%; 
+            background: rgba(255,255,255,0.03); 
+            border: 1px solid rgba(255,255,255,0.1); 
+            padding: 18px; 
+            border-radius: 18px; 
+            color: var(--text); 
+            cursor: pointer; 
+            transition: 0.2s; 
+            text-align: left; 
+            margin-bottom: 10px; 
+            font-size: 1rem; 
+        }
+
+        .option-btn:hover { 
+            background: rgba(56, 189, 248, 0.15); 
+            border-color: var(--accent); 
+            transform: translateX(8px); 
+        }
+
+        .hidden { display: none; }
+        
+        .result-text { 
+            font-size: 1.8rem; 
+            font-weight: 900; 
+            color: var(--accent); 
+            margin: 20px 0; 
+        }
+        
+        h2 { min-height: 60px; }
+
+        footer {
+            width: 100%;
+            background-color: rgba(10, 10, 10, 0.8); 
+            color: #ffffff; 
+            text-align: center; 
+            padding: 25px 0; 
+            margin-top: auto; /* Sayfanın en altına iter */
+            font-family: 'Inter', sans-serif; 
+            border-top: 1px solid rgba(56, 189, 248, 0.2);
+            letter-spacing: 1px;
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body>
+    <div id="quiz-container">
+        <div id="welcome-area">
+            <h1>İz Analiz</h1>
+            <p>Dünyadaki izini keşfetmeye hazır mısın?</p>
+            <input type="text" id="user-name" placeholder="İsminizi yazın...">
+            <br>
+            <button class="start-btn" onclick="startQuiz()">Başlat</button>
+        </div>
+
+        <div id="question-area" class="hidden">
+            <div class="progress-bar"><div id="progress-fill"></div></div>
+            <h2 id="question-text"></h2>
+            <div id="options-container"></div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            { q: "Ulaşım aracın hangisi?", options: [{t:"🚶 Yürüyüş / Bisiklet", p:100}, {t:"🚌 Toplu Taşıma", p:600}, {t:"🚗 Şahsi Araç", p:1500}, {t:"🚜 SUV / Büyük", p:2500}] },
+            { q: "Beslenme alışkanlığın?", options: [{t:"🌿 Vegan", p:200}, {t:"🥗 Vejetaryen", p:700}, {t:"🍗 Orta Et", p:1400}, {t:"🥩 Çok Et", p:2200}] },
+            { q: "Yıllık uçuş sayın?", options: [{t:"☁️ Hiç", p:0}, {t:"✈️ 1-2 Kez", p:1200}, {t:"🌎 3-5 Kez", p:2800}, {t:"🚀 6+", p:5000}] },
+            { q: "Isınma yöntemin?", options: [{t:"☀️ Yenilenebilir", p:100}, {t:"🔥 Doğalgaz", p:900}, {t:"⚡ Elektrik", p:1500}, {t:"🪵 Kömür", p:2500}] },
+            { q: "Duş süren?", options: [{t:"🚿 <5 dk", p:200}, {t:"🧼 5-10 dk", p:500}, {t:"🛁 10-20 dk", p:1000}, {t:"🌊 20+ dk", p:1800}] },
+            { q: "Alışveriş sıklığın?", options: [{t:"👕 Nadir", p:100}, {t:"🛍️ 3-4 ayda bir", p:800}, {t:"👗 Her ay", p:1800}, {t:"👠 Her hafta", p:3000}] },
+            { q: "Geri dönüşüm?", options: [{t:"♻️ Her zaman", p:0}, {t:"🍾 Kısmen", p:500}, {t:"🗑️ Nadir", p:1200}, {t:"🚫 Hiç", p:2000}] },
+            { q: "Ev yalıtımı?", options: [{t:"🏠 Çok İyi", p:100}, {t:"🧱 Orta", p:800}, {t:"💨 Zayıf", p:1600}, {t:"🏚️ Yok", p:2500}] },
+            { q: "Cihaz kullanımın?", options: [{t:"📱 Az", p:300}, {t:"💻 Orta", p:900}, {t:"🎮 Çok", p:1800}, {t:"🆕 Sürekli Yeni", p:3500}] },
+            { q: "Paket servis?", options: [{t:"🍳 Hiç", p:100}, {t:"🍕 Az", p:800}, {t:"🍔 Orta", p:1600}, {t:"🥡 Çok", p:2500}] }
+        ];
+
+        let current = 0;
+        let score = 0;
+
+        function startQuiz() {
+            const userName = document.getElementById('user-name').value;
+            if(!userName) {
+                alert("Lütfen isminizi yazın!");
+                return;
+            }
+            localStorage.setItem('userName', userName);
+            document.getElementById('welcome-area').classList.add('hidden');
+            document.getElementById('question-area').classList.remove('hidden');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const q = questions[current];
+            document.getElementById('question-text').innerText = q.q;
+            document.getElementById('progress-fill').style.width = `${((current+1)/10)*100}%`;
+            
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+            
+            q.options.forEach(opt => {
+                const btn = document.createElement('button'); 
+                btn.className = 'option-btn'; 
+                btn.innerText = opt.t;
+                btn.onclick = () => { 
+                    score += opt.p; 
+                    current++; 
+                    if(current < 10) {
+                        loadQuestion(); 
+                    } else {
+                        finishQuiz(); 
+                    }
+                };
+                container.appendChild(btn);
+            });
+        }
+
+        function finishQuiz() {
+            localStorage.setItem('userCarbonScore', score);
+            document.getElementById('question-area').innerHTML = `
+                <h2>Analiz Bitti!</h2>
+                <div class="result-text">${score.toLocaleString()} kg CO2</div>
+                <p>Dünya hazırlanıyor...</p>
+            `;
+            setTimeout(() => {
+                window.location.href = "senin-dunyan.html";
+            }, 2500);
+        }
+    </script>
+
+    <footer>
+        <p>Copyright © 2026 <strong>Metin Berk Diktaş</strong>. Tüm Hakları Saklıdır.</p>
+    </footer>
+</body>
+</html>

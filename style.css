@@ -1,0 +1,306 @@
+/* Modern Renk Paleti ve Font */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+
+:root {
+    --primary-gradient: linear-gradient(135deg, #1a4d2e 0%, #4f6f52 100%);
+    --bg-color: #f0f4f0;
+    --card-bg: rgba(255, 255, 255, 0.9);
+    --text-main: #1a2f23;
+    --accent: #10b981;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-color);
+    background-image: radial-gradient(circle at 2px 2px, #d1d5db 1px, transparent 0);
+    background-size: 40px 40px; /* Arka plana hafif noktacıklı profesyonel doku */
+    color: var(--text-main);
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Navigasyon - Daha şeffaf ve şık */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 10%;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo { 
+    font-weight: 800; 
+    font-size: 1.2rem;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -1px;
+}
+
+/* Ana Konteynır */
+.container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+/* Kart Tasarımı - Cam Efekti */
+.card {
+    background: var(--card-bg);
+    backdrop-filter: blur(15px);
+    padding: 50px;
+    border-radius: 32px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.04);
+    max-width: 480px;
+    width: 100%;
+    text-align: center;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+h1 { font-weight: 800; font-size: 2rem; margin-bottom: 10px; color: #111; }
+p { color: #64748b; font-size: 1.1rem; line-height: 1.6; }
+
+/* İnput Alanları */
+input {
+    width: 100%;
+    padding: 18px;
+    border: 2px solid #e2e8f0;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.85);
+    font-size: 1rem;
+    color: var(--text-main);
+    outline: none;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    margin-bottom: 20px;
+}
+
+input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
+}
+
+button {
+    width: 100%;
+    padding: 16px 18px;
+    font-size: 1rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #16a34a, #22c55e);
+    color: white;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+}
+
+button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 22px rgba(0, 0, 0, 0.16);
+}
+
+button:active {
+    transform: translateY(0);
+    box-shadow: 0 8px 14px rgba(0, 0, 0, 0.12);
+}
+
+.badge {
+    display: inline-block;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: rgba(16, 185, 129, 0.16);
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.progress-container {
+    height: 12px;
+    background: rgba(226, 232, 240, 0.5);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 16px 0 24px;
+}
+
+#progress-bar {
+    width: 0;
+    height: 100%;
+    background: linear-gradient(135deg, #10b981, #06b6d4);
+    border-radius: 10px;
+    transition: width 0.35s ease;
+}
+
+.question-text {
+    font-weight: 600;
+    margin: 0 0 16px;
+}
+
+@media (max-width: 600px) {
+    nav {
+        padding: 16px 5%;
+    }
+
+    .card {
+        padding: 32px 24px;
+        border-radius: 24px;
+    }
+}
+.articles-container {
+    padding: 80px 10%;
+    background: white;
+}
+
+.section-title {
+    font-size: 2rem;
+    color: var(--primary);
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.article-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.article-card {
+    background: var(--light);
+    padding: 30px;
+    border-radius: 24px;
+    transition: 0.3s;
+    border: 1px solid transparent;
+}
+
+.article-card:hover {
+    transform: translateY(-10px);
+    border-color: var(--accent);
+    background: white;
+    box-shadow: 0 20px 30px rgba(0,0,0,0.05);
+}
+
+.article-badge {
+    background: var(--primary-gradient);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 8px;
+    font-size: 0.7rem;
+    display: inline-block;
+    margin-bottom: 15px;
+}
+
+.article-card h3 {
+    margin: 10px 0;
+    color: var(--text-main);
+}
+
+.article-card p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #64748b;
+}
+
+.read-more {
+    display: inline-block;
+    margin-top: 15px;
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+/* Rozet animasyonu */
+.badge-pop-in {
+    animation: popIn 0.8s ease-out;
+}
+
+@keyframes popIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.5) translateY(20px);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+/* Rozet Pop-In Animasyonu */
+.badge-pop-in {
+    animation: badgePop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    opacity: 0;
+    transform: scale(0.5);
+}
+
+@keyframes badgePop {
+    0% {
+        opacity: 0;
+        transform: scale(0.5) translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+#badge-container {
+    transition: all 0.5s ease;
+}
+
+.badge-pop-in {
+    display: block !important;
+    animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes bounceIn {
+    0% { transform: scale(0.3); opacity: 0; }
+    70% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(1); }
+}
+/* --- ROZET ANİMASYONU --- */
+
+/* Başlangıçta görünmez ve küçük tutuyoruz */
+#badge-container {
+    opacity: 0;
+    transform: scale(0);
+    display: none; /* JS gelene kadar tamamen gizli */
+}
+
+/* JavaScript bu sınıfı eklediğinde animasyon başlar */
+.badge-animate {
+    display: block !important;
+    animation: 
+        megaBounce 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.27) forwards,
+        floating 3s ease-in-out infinite 1.5s; 
+}
+
+@keyframes megaBounce {
+    0% {
+        opacity: 0;
+        transform: scale(0) rotate(-20deg);
+    }
+    60% {
+        transform: scale(1.2) rotate(10deg);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+@keyframes floating {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
